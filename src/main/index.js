@@ -70,6 +70,7 @@ ipcMain.on('hp5-folder', (event, arg) => {
       if (filePath && fs.existsSync(filePath[0])) {
         config.set('hp5-folder', filePath[0])
         filePath = filePath[0]
+        event.sender.send('hp5-folder-clear')
       }
       break
   }

@@ -32,7 +32,8 @@
       </el-col>
     </el-row>
     <el-row>
-      <el-col :span="4">
+      <el-col 
+        :span="fileViewWidth">
         <div class="grid-content bg-purple-dark">
           <el-menu default-active="1" 
             class="el-menu-vertical-demo" 
@@ -40,9 +41,15 @@
             @close="handleClose" 
             :collapse="isCollapse">
             <el-menu-item index="1"
-              @click="$refs.viewer.loadH5P()">
-              <span slot="title"> Play H5P </span>
-              <i class="el-icon-caret-right"></i>
+              @click="$refs.viewer.playH5P()">
+              <icon 
+                :name="$refs.viewer.playing ? 'pause-circle' : 'play-circle-o'" 
+                scale="1" 
+                class="el-icon-more" > 
+              </icon>
+              <template slot="title"> 
+                Play H5P
+              </template>
             </el-menu-item>
             <el-submenu index="2">
               <template slot="title">
@@ -53,7 +60,8 @@
                 </span>
               </template>
               <el-menu-item-group title="Folders">
-                <el-menu-item 
+                <el-menu-item
+                  class="folders" 
                   index="2-2"
                   v-for="(path, key) in filePaths"
                   :key="key"
@@ -63,6 +71,7 @@
               </el-menu-item-group>
               <el-menu-item-group title="Archives">
                 <el-menu-item
+                  class="folders"
                   index="2-1" 
                   v-for="(file, key) in files"
                   :key="key">
@@ -82,7 +91,7 @@
         </div>
       </el-col>
       <el-col 
-        :span="20">
+        :span="viewerWidth">
         <h5p
           ref="viewer">  
         </h5p>
@@ -103,7 +112,9 @@
         filePath: '',
         files: [],
         filePaths: [],
-        isCollapse: false
+        isCollapse: false,
+        fileViewWidth: 12,
+        viewerWidth: 12
       }
     },
     mounted () {
@@ -121,6 +132,11 @@
         console.log('hp5-folder-path', arg)
         vm.filePaths.push(arg)
       })
+      vm.$root.ipc.on('hp5-folder-clear', (event, arg) => {
+        console.log('hp5-folder-clear', arg)
+        vm.filePaths.length = 0
+        vm.files.length = 0
+      })
     },
     methods: {
       extractFile () {
@@ -133,6 +149,13 @@
       },
       toggleSideBar () {
         this.isCollapse = !this.isCollapse
+        if (this.isCollapse) {
+          this.fileViewWidth = 2
+          this.viewerWidth = 22
+        } else {
+          this.fileViewWidth = 12
+          this.viewerWidth = 12
+        }
       },
       handleOpen (key, keyPath) {
         // when a menu is opeen
@@ -144,6 +167,11 @@
   }
 </script>
 
-<style>
-
+<style scoped>
+.archives {
+  overflow-wrap: break-word;
+}
+.folders {
+  overflow-wrap: break-word;
+}
 </style>
