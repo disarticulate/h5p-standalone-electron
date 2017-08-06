@@ -1,6 +1,6 @@
 {
-  "name": "h5p-viewer",
-  "productName": "h5p-viewer",
+  "name": "h5p-standalone-electron",
+  "productName": "H5P Stand Alone Viewer",
   "version": "0.0.2",
   "author": "Eric Xanderson <disarticulate@gmail.com>",
   "description": "A standalone viewer for H5P documents",
