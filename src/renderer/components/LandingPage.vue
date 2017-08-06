@@ -43,7 +43,7 @@
             <el-menu-item index="1"
               @click="$refs.viewer.playH5P()">
               <icon 
-                :name="$refs.viewer.playing ? 'pause-circle' : 'play-circle-o'" 
+                :name="viewerPlaying() ? 'pause-circle' : 'play-circle-o'" 
                 scale="1" 
                 class="el-icon-more" > 
               </icon>
@@ -139,8 +139,8 @@
       })
     },
     methods: {
-      extractFile () {
-
+      viewerPlaying () {
+        return this.$refs.viewer ? this.$refs.viewer.playing : false
       },
       selectFolderPath () {
         var vm = this
