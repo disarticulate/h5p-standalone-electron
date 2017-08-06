@@ -6,6 +6,7 @@ const Config = require('electron-config')
 const appPort = 9080
 const config = new Config()
 const fs = require('fs-extra')
+const finder = require('find')
 
 /**
  * Set `__static` path to static files in production
@@ -51,13 +52,14 @@ app.on('activate', () => {
   }
 })
 
+var devServer = require('./server.js')
+
 ipcMain.on('hp5-folder', (event, arg) => {
   var filePath = config.get('hp5-folder') || app.getPath('downloads')
   switch (arg) {
     case 'mounted':
       if (fs.existsSync(filePath)) {
         config.set('hp5-folder', filePath)
-        filePath = arg
       }
       break
     case 'select':
@@ -71,8 +73,27 @@ ipcMain.on('hp5-folder', (event, arg) => {
       }
       break
   }
+
   filePath = filePath || app.getPath('downloads')
   event.sender.send('hp5-folder', filePath)
+  devServer.rootFolder = filePath
+  findH5PFiles(filePath, event)
+  findH5PFolders(filePath, event)
 })
 
-require('./server.js')
+const findH5PFiles = (folder, event) => {
+  finder.eachfile(/\.H5P$/i, folder, (file) => {
+    var filename = file.replace(`${folder}/`, '')
+    console.log(filename)
+    event.sender.send('hp5-folder-file', filename)
+  })
+}
+
+const findH5PFolders = (folder, event) => {
+  finder.eachfile(/H5P\.json/i, folder, (file) => {
+    var filePath = file.replace(/\/H5P\.json/ig, '')
+    filePath = filePath.replace(`${folder}/`, '')
+    console.log(filePath)
+    event.sender.send('hp5-folder-path', filePath)
+  })
+}

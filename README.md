@@ -1,4 +1,4 @@
-# h5p-viewer
+# h5p-standalone-electron
 
 > An electron-vue project
 

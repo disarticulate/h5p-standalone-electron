@@ -6,9 +6,12 @@ var mime = require('mime')
 const fileExists = require('file-exists')
 const backendPort = 9081
 
-function handleRequest (req, res) {
-  var file = path.join('huh', req.url)
-  console.log(req.url)
+exports.rootFolder = '/'
+
+function handleWorkspaceRequest (req, res) {
+  var file = path.join(exports.rootFolder, req.url)
+  file = file.replace(`/workspace`, '')
+  console.log(`[${exports.rootFolder}]${req.url} > ${file}`)
   fileExists(file, (err, exists) => {
     if (exists && fs.lstatSync(file).isFile()) {
       res.setHeader('Content-Type', mime.lookup(file))
@@ -27,7 +30,7 @@ function handleRequest (req, res) {
   })
 }
 
-var server = http.createServer(handleRequest)
+var server = http.createServer(handleWorkspaceRequest)
 
 server.listen(backendPort, function () {
   console.log(`server started at http://localhost:${backendPort}`)

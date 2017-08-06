@@ -44,6 +44,33 @@
               <span slot="title"> Play H5P </span>
               <i class="el-icon-caret-right"></i>
             </el-menu-item>
+            <el-submenu index="2">
+              <template slot="title">
+                <i class="el-icon-more">
+                </i>
+                <span slot="title">
+                  Available H5P
+                </span>
+              </template>
+              <el-menu-item-group title="Folders">
+                <el-menu-item 
+                  index="2-2"
+                  v-for="(path, key) in filePaths"
+                  :key="key"
+                  @click="$refs.viewer.loadH5PPath(path)">
+                  {{path}}
+                </el-menu-item>
+              </el-menu-item-group>
+              <el-menu-item-group title="Archives">
+                <el-menu-item
+                  index="2-1" 
+                  v-for="(file, key) in files"
+                  :key="key"
+                  @click="$refs.viewer.loadH5PFile(file)">
+                    {{file}}
+                </el-menu-item>
+              </el-menu-item-group>
+            </el-submenu>
           </el-menu>
         </div>
       </el-col>
@@ -68,6 +95,7 @@
       return {
         filePath: '',
         files: [],
+        filePaths: [],
         isCollapse: false
       }
     },
@@ -78,8 +106,19 @@
         console.log('hp5-folder', arg)
         vm.filePath = arg
       })
+      vm.$root.ipc.on('hp5-folder-file', (event, arg) => {
+        console.log('hp5-folder-file', arg)
+        vm.files.push(arg)
+      })
+      vm.$root.ipc.on('hp5-folder-path', (event, arg) => {
+        console.log('hp5-folder-path', arg)
+        vm.filePaths.push(arg)
+      })
     },
     methods: {
+      extractFile () {
+
+      },
       selectFolderPath () {
         var vm = this
         console.log('hp5-folder', 'select')
