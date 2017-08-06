@@ -5,6 +5,7 @@ import Icon from 'vue-awesome/components/Icon'
 
 import 'element-ui/lib/theme-default/index.css'
 import 'vue-awesome/icons'
+import '../../theme/index.css'
 
 import App from './App'
 import router from './router'
