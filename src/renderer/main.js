@@ -1,7 +1,10 @@
 import Vue from 'vue'
 import axios from 'axios'
 import Element from 'element-ui'
+import Icon from 'vue-awesome/components/Icon'
+
 import 'element-ui/lib/theme-default/index.css'
+import 'vue-awesome/icons'
 
 import App from './App'
 import router from './router'
@@ -14,13 +17,16 @@ Vue.http = Vue.prototype.$http = axios
 Vue.config.productionTip = false
 
 Vue.use(Element)
+Vue.component('icon', Icon)
 
 // export global window object H5P as all plugins use it directly
 window.H5P = window.H5P || {}
 
 /* eslint-disable no-new */
 new Vue({
-  components: { App },
+  components: {
+    App
+  },
   router,
   store,
   data () {
