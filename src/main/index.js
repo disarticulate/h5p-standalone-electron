@@ -1,7 +1,8 @@
 'use strict'
 
-import { app, BrowserWindow, dialog, ipcMain } from 'electron'
+import { app, BrowserWindow, dialog, ipcMain, protocol } from 'electron'
 
+const path = require('path')
 const Config = require('electron-config')
 const appPort = 9080
 const config = new Config()
@@ -28,7 +29,10 @@ function createWindow () {
   mainWindow = new BrowserWindow({
     height: 563,
     useContentSize: true,
-    width: 1000
+    width: 1000,
+    'web-preferences': {
+      'web-security': false
+    }
   })
 
   mainWindow.loadURL(winURL)
@@ -36,8 +40,17 @@ function createWindow () {
   mainWindow.on('closed', () => {
     mainWindow = null
   })
-}
+  mainWindow.openDevTools()
 
+  // h5p library makes ajax requests, in production, use a custom protocol
+  protocol.registerFileProtocol('h5p', (request, callback) => {
+    const url = request.url.substr(7)
+    // eslint-disable-next-line
+    callback({ path: path.normalize(`${url}`) })
+  }, (error) => {
+    if (error) console.error('Failed to register protocol')
+  })
+}
 app.on('ready', createWindow)
 
 app.on('window-all-closed', () => {

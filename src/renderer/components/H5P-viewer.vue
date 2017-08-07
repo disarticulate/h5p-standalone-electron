@@ -26,7 +26,7 @@
     methods: {
       rootPath () {
         return process.env.NODE_ENV === 'production'
-          ? `file://${this.filePath}`
+          ? `h5p://${this.filePath}/`
           : 'http://localhost:9081/workspace/'
       },
       loadH5PPath (filePath) {
