@@ -93,6 +93,7 @@
       <el-col 
         :span="viewerWidth">
         <h5p
+          :filePath="filePath"
           ref="viewer">  
         </h5p>
       </el-col>
