@@ -14,34 +14,33 @@
     },
     data () {
       return {
-        H5P: this.$root.H5P,
-        jQuery: this.$root.H5P.jQuery,
         playing: false,
         loaded: false
       }
     },
     computed: {
-
+      H5P () { return this.$root.H5P },
+      jQuery () { return this.$root.H5P.jQuery }
     },
     methods: {
       rootPath () {
         return process.env.NODE_ENV === 'production'
-          ? `h5p://${this.filePath}/`
-          : 'http://localhost:9081/workspace/'
+          ? `file:///${this.filePath}/`
+          : `http://localhost:9081/workspace/`
       },
       loadH5PPath (filePath) {
         var vm = this
-        console.log(`loadH5PPath [${vm.rootPath()}${filePath}]`);
-        (function ($) {
+        console.warn(`loadH5PPath [${vm.rootPath()}${filePath}]`);
+        (function (_jquery) {
           var h5pcontent = `${vm.rootPath()}${filePath}`
           vm.$notify.info({
             title: 'Loading',
             message: h5pcontent
           })
-          $(function () {
-            $('.h5p-container').empty()
+          _jquery(function () {
+            _jquery('.h5p-container').empty()
             vm.loaded = false
-            $('.h5p-container').h5p({
+            _jquery('.h5p-container').h5p({
               frameJs: 'static/libs/h5p-standalone/js/h5p-standalone-frame.js',
               frameCss: `static/libs/h5p-standalone/styles/h5p.css`,
               h5pContent: h5pcontent

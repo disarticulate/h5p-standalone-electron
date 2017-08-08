@@ -45,6 +45,7 @@ function createWindow () {
   // h5p library makes ajax requests, in production, use a custom protocol
   protocol.registerFileProtocol('h5p', (request, callback) => {
     const url = request.url.substr(7)
+    console.log('h5p://', url)
     // eslint-disable-next-line
     callback({ path: path.normalize(`${url}`) })
   }, (error) => {
@@ -65,7 +66,7 @@ app.on('activate', () => {
   }
 })
 
-var devServer = require('./server.js')
+// var devServer = require('./server.js')
 
 ipcMain.on('hp5-folder', (event, arg) => {
   var filePath = config.get('hp5-folder') || app.getPath('downloads')
@@ -90,7 +91,7 @@ ipcMain.on('hp5-folder', (event, arg) => {
 
   filePath = filePath || app.getPath('downloads')
   event.sender.send('hp5-folder', filePath)
-  devServer.rootFolder = filePath
+  // devServer.rootFolder = filePath
   findH5PFiles(filePath, event)
   findH5PFolders(filePath, event)
 })
